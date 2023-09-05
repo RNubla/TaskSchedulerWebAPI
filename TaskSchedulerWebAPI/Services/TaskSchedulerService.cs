@@ -14,6 +14,11 @@ namespace TaskSchedulerWebAPI.Services
             READY,
             RUNNING
         }
+        public enum JOB_ENABLED
+        {
+            Enabled,
+            Disabled
+        }
         Dictionary<int, string> LastTaskResultDict = new Dictionary<int, string>
         {
             {0, "The operation completed successfully" },
@@ -55,10 +60,11 @@ namespace TaskSchedulerWebAPI.Services
         {
             List<Task> tasks = new List<Task>();
             //Console.WriteLine(listOfTask);
-      
+            int id = 0;
             foreach(IRegisteredTask task in listOfTask)
             {
                 Task tempTask = new Task();
+                tempTask.Id = id;
                 tempTask.Name = task.Name;
                 tempTask.Path = task.Path;
                 tempTask.State = Enum.GetName(enumType: typeof(TASK_STATE), task.State);
@@ -70,8 +76,9 @@ namespace TaskSchedulerWebAPI.Services
                 tempTask.LastTaskResult = LastTaskResultDict[task.LastTaskResult];
                 tempTask.NextRunTime = task.NextRunTime;
                 tempTask.NumberOfMissedRuns = task.NumberOfMissedRuns;
-                tempTask.Enabled = task.Enabled;
+                tempTask.Enabled = Enum.GetName(typeof(JOB_ENABLED), task.Enabled);
                 tasks.Add(tempTask);
+                id++;
 
             }
             return tasks;
